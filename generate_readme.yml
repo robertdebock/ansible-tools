@@ -45,7 +45,7 @@
         var: requirements
 
     - name: load compatibility
-      command: "/home/robertdb/Documents/ansible/roles/tools/compatibility.sh"
+      command: "{{ playbook_dir }}/compatibility.sh"
       args:
         chdir: "{{ role_path }}"
       register: compatibility
@@ -57,5 +57,5 @@
 
     - name: render template
       template:
-        src: ~/Documents/ansible/roles/tools/templates/README.md.j2
+        src: "{{ playbook_dir }}/templates/README.md.j2"
         dest: "{{ role_path }}/README.md"
