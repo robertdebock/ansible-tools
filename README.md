@@ -16,6 +16,8 @@ The README.md contains stuff that's already described somewhere else, such as:
 The `generate_readme.yml` helps to create a consistent README.
 
 ```
-# In the directory of your role:
-./generate_readme.yml -e pwd=$(pwd)
+# Go to the directory of your role:
+cd /some/path/to/your/role
+# Generate the README.md:
+/path/to/generate_readme.yml -e pwd=$(pwd)
 ```
