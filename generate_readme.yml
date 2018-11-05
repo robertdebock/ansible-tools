@@ -1,0 +1,61 @@
+#!/usr/bin/env ansible-playbook
+---
+- name: generate a README.md for roles
+  hosts: localhost
+  become: no
+  gather_facts: no
+
+  tasks:
+    - name: set role_path and role_name
+      set_fact:
+        role_path: "{{ pwd }}"
+        role_name: "{{ pwd | basename | regex_replace('ansible-role-') }}"
+
+    - name: load meta
+      include_vars:
+        file: "{{ role_path }}/meta/main.yml"
+        name: meta
+
+    - name: load defaults/main.yml
+      slurp:
+        src: "{{ role_path }}/defaults/main.yml"
+      register: variables
+
+    - name: check if requirements.yml exists
+      stat:
+        path: "{{ role_path }}/requirements.yml"
+      register: check_requirements
+
+    - name: load requirements
+      slurp:
+        src: "{{ role_path }}/requirements.yml"
+      register: requirements
+      when:
+        - check_requirements.stat.exists
+
+    - name: set no requirements when none exist
+      set_fact:
+        requirements:
+          content: "{{ '- none' | b64encode }}"
+      when:
+        - not check_requirements.stat.exists
+
+    - name: show shit
+      debug:
+        var: requirements
+
+    - name: load compatibility
+      command: "/home/robertdb/Documents/ansible/roles/tools/compatibility.sh"
+      args:
+        chdir: "{{ role_path }}"
+      register: compatibility
+
+    - name: load example
+      slurp:
+        src: "{{ role_path }}/molecule/default/playbook.yml"
+      register: example
+
+    - name: render template
+      template:
+        src: ~/Documents/ansible/roles/tools/templates/README.md.j2
+        dest: "{{ role_path }}/README.md"
