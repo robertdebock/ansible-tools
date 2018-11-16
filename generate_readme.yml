@@ -40,10 +40,6 @@
       when:
         - not check_requirements.stat.exists
 
-    - name: show shit
-      debug:
-        var: requirements
-
     - name: load compatibility
       command: "{{ playbook_dir }}/compatibility.sh"
       args:
