@@ -9,7 +9,7 @@ Example Playbook
 ----------------
 
 This example is taken from `molecule/default/playbook.yml`:
-```
+```yaml
 {{ example.content | b64decode | regex_replace('ansible-role-', 'robertdebock.') }}
 ```
 
@@ -17,7 +17,7 @@ Role Variables
 --------------
 
 These variables are set in `defaults/main.yml`:
-```
+```yaml
 {{ variables.content | b64decode }}
 ```
 
@@ -29,7 +29,9 @@ Requirements
 
 The following roles can be installed to ensure all requirements are met, using `ansible-galaxy install -r requirements.yml`:
 
+```yaml
 {{ requirements.content | b64decode }}
+```
 
 Context
 -------

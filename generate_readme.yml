@@ -45,6 +45,7 @@
       args:
         chdir: "{{ role_path }}"
       register: compatibility
+      changed_when: no
 
     - name: load example
       slurp:
