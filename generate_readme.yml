@@ -56,3 +56,13 @@
       template:
         src: "{{ playbook_dir }}/templates/README.md.j2"
         dest: "{{ role_path }}/README.md"
+
+    - name: create .github
+      file:
+        path: "{{ role_path }}/.github"
+        state: directory
+
+    - name: render .github/settings.yml
+      template:
+        src: "{{ playbook_dir }}/templates/settings.yml.j2"
+        dest: "{{ role_path }}/.github/settings.yml"
