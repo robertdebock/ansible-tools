@@ -1,9 +1,9 @@
 #!/usr/bin/env ansible-playbook
 ---
-- name: generate a README.md for roles
+- name: generate a README.md, github/settings.yml and LICENSE for roles
   hosts: localhost
   become: no
-  gather_facts: no
+  gather_facts: yes
 
   tasks:
     - name: set role_path and role_name
@@ -66,3 +66,12 @@
       template:
         src: "{{ playbook_dir }}/templates/settings.yml.j2"
         dest: "{{ role_path }}/.github/settings.yml"
+
+    - name: set author variables
+      set_fact:
+        author: Robert de Bock (robert@meinit.nl)
+
+    - name: render LICENSE
+      template:
+        src: "{{ playbook_dir }}/templates/LICENSE-2.0.txt.j2"
+        dest: "{{ role_path }}/LICENSE"
