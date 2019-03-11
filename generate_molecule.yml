@@ -1,0 +1,41 @@
+#!/usr/bin/env ansible-playbook
+---
+- name: generate molecule.yml
+  hosts: localhost
+  become: no
+  gather_facts: no
+
+  tasks:
+    - name: set facts
+      set_fact:
+        role_name: "{{ pwd | basename | regex_replace('ansible-role-') }}"
+        role_path: "{{ pwd }}"
+
+    - name: generate generic molecule.yml
+      template:
+        src: "generic-molecule.yml.j2"
+        dest: "{{ role_path }}/molecule/{{ item }}/molecule.yml"
+      with_items:
+        - centos-6
+        - centos-latest
+        - debian-latest
+        - debian-stable
+        - debian-unstable
+        - fedora-latest
+        - opensuse-leap
+        - ubuntu-devel
+        - ubuntu-latest
+        - ubuntu-rolling
+
+    - name: generate specific molecule.yml
+      template:
+        src: "{{ item }}-molecule.yml.j2"
+        dest: "{{ role_path }}/molecule/{{ item }}/molecule.yml"
+      with_items:
+        - alpine-edge
+        - alpine-latest
+        - archlinux
+        - default
+        - ec2
+        - fedora-rawhide
+        - vagrant

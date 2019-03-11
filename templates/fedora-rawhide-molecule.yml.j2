@@ -1,0 +1,20 @@
+---
+dependency:
+  name: galaxy
+  options:
+    role-file: requirements.yml
+lint:
+  name: yamllint
+driver:
+  name: docker
+platforms:
+  - name: {{ role_name }}-{{ item }}
+    image: {{ item | regex_replace('-',':') }}
+    registry:
+      url: registry.fedoraproject.org
+provisioner:
+  name: ansible
+  lint:
+    name: ansible-lint
+scenario:
+  name: {{ item }}

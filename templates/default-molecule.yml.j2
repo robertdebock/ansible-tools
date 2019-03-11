@@ -1,0 +1,48 @@
+---
+dependency:
+  name: galaxy
+  options:
+    role-file: requirements.yml
+lint:
+  name: yamllint
+driver:
+  name: docker
+platforms:
+  - name: {{ role_name }}-alpine-edge
+    image: alpine:edge
+    command: sh -c "while true ; do sleep 1 ; done"
+  - name: {{ role_name }}-alpine-latest
+    image: alpine:latest
+    command: sh -c "while true ; do sleep 1 ; done"
+  - name: {{ role_name }}-archlinux
+    image: archlinux/base
+  - name: {{ role_name }}-centos-6
+    image: centos:6
+  - name: {{ role_name }}-centos-latest
+    image: centos:latest
+  - name: {{ role_name }}-debian-latest
+    image: debian:latest
+  - name: {{ role_name }}-debian-stable
+    image: debian:stable
+  - name: {{ role_name }}-debian-unstable
+    image: debian:unstable
+  - name: {{ role_name }}-fedora-latest
+    image: fedora:latest
+  - name: {{ role_name }}-fedora-rawhide
+    image: fedora:rawhide
+  - name: {{ role_name }}-opensuse-leap
+    image: opensuse:leap
+  - name: {{ role_name }}-ubuntu-latest
+    image: ubuntu:latest
+  - name: {{ role_name }}-ubuntu-rolling
+    image: ubuntu:rolling
+  - name: {{ role_name }}-ubuntu-devel
+    image: ubuntu:devel
+  - name: {{ role_name }}-ubuntu-latest
+    image: ubuntu:latest
+provisioner:
+  name: ansible
+  lint:
+    name: ansible-lint
+scenario:
+  name: {{ item }}
