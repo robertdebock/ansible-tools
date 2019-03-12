@@ -12,9 +12,3 @@ sed -i '/ignore_docker:/d' defaults/main.yml
 
 echo "Remove empty last line"
 sed -i -e :a -e '/^\n*$/{$d;N;};/\n$/ba' defaults/main.yml
-
-echo "Rebuild documentation"
-../ansible-tools/generate_readme.yml -e "pwd=$(pwd)"
-
-git add .
-git commit -m "Simplification: remove weird ignore_docker flag."
