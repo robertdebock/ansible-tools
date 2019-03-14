@@ -2,6 +2,7 @@
 
 echo "Remove _ignore_docker from tasks/main.yml and handlers/main.yml"
 sed -i 's/ or .*_ignore_docker//' tasks/main.yml
+sed -i '/_ignore_docker/d' tasks/main.yml
 sed -i 's/ or .*_ignore_docker//' handlers/main.yml
 
 echo "Remove _ignore_docker from defaults/main.yml"
