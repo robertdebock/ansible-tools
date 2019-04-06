@@ -1,5 +1,7 @@
 #!/bin/sh
 
+echo "Running $0"
+
 echo "Remove _package_state from defaults/main.yml"
 sed -i '/_package_state/d' defaults/main.yml
 

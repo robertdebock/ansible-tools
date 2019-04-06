@@ -1,9 +1,12 @@
 #!/bin/sh
 
-echo "Remove _ignore_docker from tasks/main.yml and handlers/main.yml"
-sed -i 's/ or .*_ignore_docker//' tasks/main.yml
-sed -i '/_ignore_docker/d' tasks/main.yml
-sed -i 's/ or .*_ignore_docker//' handlers/main.yml
+echo "Running $0"
+echo "Remove _ignore_docker from tasks/*.yml and handlers/main.yml"
+sed -i 's/ or .*_ignore_docker//' tasks/*.yml
+sed -i '/_ignore_docker/d' tasks/*.yml
+if [ -f handlers/main.yml ] ; then
+  sed -i 's/ or .*_ignore_docker//' handlers/main.yml
+fi
 
 echo "Remove _ignore_docker from defaults/main.yml"
 sed -i '/Some Docker containers/d' defaults/main.yml

@@ -49,8 +49,13 @@
 
     - name: load example
       slurp:
-        src: "{{ role_path }}/molecule/default/playbook.yml"
+        src: "{{ role_path }}/molecule/resources/playbook.yml"
       register: example
+
+    - name: load prepare
+      slurp:
+        src: "{{ role_path }}/molecule/resources/prepare.yml"
+      register: prepare
 
     - name: render template
       template:

@@ -1,24 +1,30 @@
 #!/bin/sh
 
+echo "Running $0"
+
+role_name=$(basename $(pwd) | cut -d- -f3-)
+echo "Working on ${role_name}"
+
 echo "Place the prepare.yml playbook"
 for scenario in molecule/* ; do
-  cat << EOF > ${scenario}/prepare.yml
+  if [ ! -f ${scenario}/prepare.yml ] ; then
+    if [ -f ${scenario}/playbook.yml ] ; then
+      cp ${scenario}/playbook.yml ${scenario}/prepare.yml
+      sed -i "/ansible-role-${role_name}/d" ${scenario}/prepare.yml
+      sed -i 's/Converge/Prepare/' ${scenario}/prepare.yml
+      cat << EOF > ${scenario}/playbook.yml
 ---
-- name: Prepare
+- name: Converge
   hosts: all
   become: yes
-  gather_facts: no
+  gather_facts: yes
 
   roles:
-    - robertdebock.bootstrap
+    - ansible-role-${role_name}
 EOF
+    fi
+  fi
 done
 
-echo "Remove the bootstrap line from playbook.yml"
-sed -i '/robertdebock.bootstrap/d' molecule/*/playbook.yml
-
-echo "Set gather_facts to yes in playbook.yml"
-sed -i 's/gather_facts:.*/gather_facts: yes/' molecule/*/playbook.yml
-
-echo "Use yes/no instead of true/false in playbook.yml"
-sed -i 's/false/no/;s/true/yes/' molecule/*/playbook.yml
+echo "Use yes/no instead of true/false in prepare.yml"
+sed -i 's/false/no/;s/true/yes/' molecule/*/prepare.yml molecule/*/playbook.yml
