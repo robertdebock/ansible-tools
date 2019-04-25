@@ -8,7 +8,7 @@
 Example Playbook
 ----------------
 
-This example is taken from `molecule/default/playbook.yml`:
+This example is taken from `molecule/resources/playbook.yml`:
 ```yaml
 {{ example.content | b64decode | regex_replace('ansible-role-', 'robertdebock.') }}```
 
@@ -87,4 +87,4 @@ License
 Author Information
 ------------------
 
-[Robert de Bock](https://robertdebock.nl/) <robert@meinit.nl>
+{{ meta.galaxy_info.author }}
