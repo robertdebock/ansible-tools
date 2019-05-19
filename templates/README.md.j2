@@ -8,11 +8,11 @@
 Example Playbook
 ----------------
 
-This example is taken from `molecule/default/playbook.yml`:
+This example is taken from `molecule/resources/playbook.yml`:
 ```yaml
 {{ example.content | b64decode | regex_replace('ansible-role-', 'robertdebock.') }}```
 
-The machine you are running this on, may need to be prepared. Tests have been done on machines prepared by this playbook:
+The machine you are running this on, may need to be prepared.
 ```yaml
 {% if prepare.content is defined %}
 {{ prepare.content | b64decode | regex_replace('ansible-role-', 'robertdebock.') }}```
@@ -62,7 +62,7 @@ Testing
 
 If you find issues, please register them in [GitHub](https://github.com/robertdebock/ansible-role-{{ role_name }}/issues)
 
-To test this role locally please use [Molecule](https://github.com/metacloud/molecule):
+To test this role locally please use [Molecule](https://github.com/ansible/molecule):
 ```
 pip install molecule
 molecule test
@@ -91,4 +91,4 @@ License
 Author Information
 ------------------
 
-[Robert de Bock](https://robertdebock.nl/) <robert@meinit.nl>
+{{ meta.galaxy_info.author }}
