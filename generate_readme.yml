@@ -16,6 +16,11 @@
         file: "{{ role_path }}/meta/main.yml"
         name: meta
 
+    - name: see if logo.png exists
+      stat:
+        path: "{{ role_path }}/meta/logo.png"
+      register: logo
+
     - name: load defaults/main.yml
       slurp:
         src: "{{ role_path }}/defaults/main.yml"

@@ -3,6 +3,10 @@
 
 [![Build Status](https://travis-ci.org/robertdebock/ansible-role-{{ role_name }}.svg?branch=master)](https://travis-ci.org/robertdebock/ansible-role-{{ role_name }})
 
+{% if logo.stat.exists %}
+<img src="https://raw.githubusercontent.com/robertdebock/ansible-role-{{ role_name }}/master/meta/logo.png" alt="Project logo" align="right"/>
+{%endif %}
+
 {{ meta.galaxy_info.description }}
 
 Example Playbook
