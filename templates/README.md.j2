@@ -1,11 +1,9 @@
 {{ role_name }}
 =========
 
-[![Build Status](https://travis-ci.org/robertdebock/ansible-role-{{ role_name }}.svg?branch=master)](https://travis-ci.org/robertdebock/ansible-role-{{ role_name }})
+<img src="https://docs.ansible.com/ansible-tower/3.2.4/html_ja/installandreference/_static/images/logo_invert.png" width="10%" height="10%" alt="Ansible logo" align="right"/>{% if logo.stat.exists %}<img src="https://raw.githubusercontent.com/robertdebock/ansible-role-{{ role_name }}/master/meta/logo.png" alt="Project logo" width="40" height="40" align="left"/>{%endif %}
 
-{% if logo.stat.exists %}
-<img src="https://raw.githubusercontent.com/robertdebock/ansible-role-{{ role_name }}/master/meta/logo.png" alt="Project logo" align="right"/>
-{%endif %}
+<a href="https://travis-ci.org/robertdebock/ansible-role-{{ role_name }}"><img src="https://travis-ci.org/robertdebock/ansible-role-{{ role_name }}.svg?branch=master" alt="Build status" align="left"/></a>
 
 {{ meta.galaxy_info.description }}
 
