@@ -1,6 +1,6 @@
 #!/usr/bin/env ansible-playbook
 ---
-- name: generate a README.md, github/settings.yml and LICENSE for roles
+- name: generate a README.md, github/settings.yml, LICENSE and CONTRIBUTING.md
   hosts: localhost
   become: no
   gather_facts: yes
@@ -92,3 +92,8 @@
       template:
         src: "{{ playbook_dir }}/templates/LICENSE-2.0.txt.j2"
         dest: "{{ role_path }}/LICENSE"
+
+    - name: place CONTRIBUTING.md
+      copy:
+        src: "{{ playbook_dir }}/files/CONTRIBUTING.md"
+        dest: "{{ role_path }}/CONTRIBUTING.md"
