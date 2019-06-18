@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -x
 
 echo "This role has been tested against the following distributions and Ansible version:"
 echo ""
@@ -20,10 +20,10 @@ cat .travis.yml | docker run -i --rm jlordiales/jyparser get ".env" | while read
       distribution='ubuntu-devel*'
     ;;
   esac
-  grep "${distribution}" .travis.yml | grep -v 'fail' | grep '>=2.7,<2.8' > /dev/null && v26=yes || v26=no
-  grep "${distribution}" .travis.yml | grep -v 'fail' | grep 'version=\"\"' > /dev/null && v27=yes || v27=no
+  grep "${distribution}" .travis.yml | grep -v 'fail' | grep '>=2.7,<2.8' > /dev/null && previous=yes || previous=no
+  grep "${distribution}" .travis.yml | grep -v 'fail' | grep 'version=\"\"' > /dev/null && current=yes || current=no
   grep "${distribution}" .travis.yml | grep -v 'fail' | grep 'version=\"devel\"' > /dev/null && devel='yes*' || devel='no*'
-  echo "|${distribution}|${v26}|${v27}|${devel}|"
+  echo "|${distribution}|${previous}|${current}|${devel}|"
  done
 done | sort | uniq
 echo
