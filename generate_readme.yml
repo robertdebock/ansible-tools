@@ -97,3 +97,8 @@
       copy:
         src: "{{ playbook_dir }}/files/CONTRIBUTING.md"
         dest: "{{ role_path }}/CONTRIBUTING.md"
+
+    - name: render SECURITY.md
+      template:
+        src: "{{ playbook_dir }}/templates/SECURITY.md.j2"
+        dest: "{{ role_path }}/SECURITY.md"
