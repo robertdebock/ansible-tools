@@ -20,6 +20,7 @@ The machine you are running this on, may need to be prepared.
 {{ prepare.content | b64decode | regex_replace('ansible-role-', 'robertdebock.') }}```
 {% else %}
 No preparation required.
+```
 {% endif %}
 
 Also see a [full explanation and example](https://robertdebock.nl/how-to-use-these-roles.html) on how to use these roles.
