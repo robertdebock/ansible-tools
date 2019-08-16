@@ -21,6 +21,30 @@
         path: "{{ role_path }}/meta/logo.png"
       register: logo
 
+    - name: see if version.md exists
+      stat:
+        path: "{{ role_path }}/meta/version.md"
+      register: versionmdstat
+
+    - name: load meta/version.md
+      slurp:
+        src: "{{ role_path }}/meta/version.md"
+      register: versionmd
+      when:
+        - versionmdstat.stat.exists
+
+    - name: see if exception.md exists
+      stat:
+        path: "{{ role_path }}/meta/exception.md"
+      register: exceptionmdstat
+
+    - name: load meta/exception.md
+      slurp:
+        src: "{{ role_path }}/meta/exception.md"
+      register: exceptionmd
+      when:
+        - exceptionmdstat.stat.exists
+
     - name: load defaults/main.yml
       slurp:
         src: "{{ role_path }}/defaults/main.yml"
