@@ -21,17 +21,17 @@
         path: "{{ role_path }}/meta/logo.png"
       register: logo
 
-    - name: see if version.md exists
+    - name: see if version.yml exists
       stat:
-        path: "{{ role_path }}/meta/version.md"
-      register: versionmdstat
+        path: "{{ role_path }}/meta/version.yml"
+      register: versionymlstat
 
-    - name: load meta/version.md
-      slurp:
-        src: "{{ role_path }}/meta/version.md"
-      register: versionmd
+    - name: load meta/version.yml
+      include_vars:
+        file: "{{ role_path }}/meta/version.yml"
+      register: versionyml
       when:
-        - versionmdstat.stat.exists
+        - versionymlstat.stat.exists
 
     - name: see if exception.md exists
       stat:

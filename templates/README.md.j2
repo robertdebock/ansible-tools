@@ -59,12 +59,18 @@ Compatibility
 {{ compatibility.stdout }}
 
 {% if exceptionmd.content is defined %}{{ exceptionmd.content | b64decode }}
-{% endif %}{% if versionmd.content is defined %}
-Upstream version(s)
+{% endif %}{% if versionyml is defined %}
+Included version(s)
 -------------------
 
-{{ versionmd.content | b64decode }}
-{% endif %}
+This role [refers to a version]({{ reference }}) released by {{ project_name }}. Check the released version(s) here:
+{% for version in versions %}
+- [{{ version.name }}]({{ version.url }}).
+{% endfor %}
+
+This version reference means a role may get outdated. Monthly tests occur to see if [bit-rot](https://en.wikipedia.org/wiki/Software_rot) occured. If you however find a problem, please create an issue, I'll get on it as soon as possible.{% endif %}
+
+
 Testing
 -------
 
