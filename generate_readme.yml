@@ -93,14 +93,6 @@
       when:
         - check_prepare.stat.exists | bool
 
-    - name: debug
-      debug:
-        msg: "{{ versionyml }}"
-
-    - name: debug
-      debug:
-        msg: "{{ exceptionyml }}"
-
     - name: render template
       template:
         src: "{{ playbook_dir }}/templates/README.md.j2"

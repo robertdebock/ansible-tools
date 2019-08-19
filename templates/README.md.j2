@@ -67,8 +67,8 @@ Some variarations of the build matrix do not work. These are the variations and 
 | variation                 | reason                 |
 |---------------------------|------------------------|
 {% for exception in exceptions %}| {{ exception.variation }} | {{ exception.reason }} |
-{% endfor %}
-{% endif %}
+{% endfor %}{% endif %}
+
 {% if versions is defined %}
 Included version(s)
 -------------------
