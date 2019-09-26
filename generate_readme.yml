@@ -93,6 +93,13 @@
       when:
         - check_prepare.stat.exists | bool
 
+    - name: generate modules.yml
+      command: "{{ playbook_dir }}/generate_modules.sh"
+      args:
+        chdir: "{{ role_path }}"
+      register: modules
+      changed_when: no
+
     - name: render template
       template:
         src: "{{ playbook_dir }}/templates/README.md.j2"
