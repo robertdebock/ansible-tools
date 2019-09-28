@@ -1,9 +1,8 @@
 #!/bin/sh
 
-for scenario in fedora-{latest,rawhide} ubuntu-{rolling,latest} debian-stable; do
+for scenario in fedora-{latest,rawhide} ubuntu-{rolling,latest,devel} debian-stable debian-unstalbe; do
   grep "ansible_python_interpreter" molecule/${scenario}/molecule.yml > /dev/null
   if [ "$?" = "1" ] ; then
-    # sed -i 's%ansible-lint%ansible-lint\n  inventory:\n    group_vars:\n      all:\n        ansible_python_interpreter: /usr/bin/python3%' molecule/${scenario}/molecule.yml
     sed -i "s%scenario:%  inventory:\n    group_vars:\n      all:\n        ansible_python_interpreter: /usr/bin/python3\nscenario:%" molecule/${scenario}/molecule.yml
   fi
 done
