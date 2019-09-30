@@ -100,6 +100,10 @@
       register: modules
       changed_when: no
 
+    - name: load ansible galaxy id
+      shell: "ansible-galaxy info robertdebock.{{ role_name }} | grep '	id: ' | awk '{print $NF}'"
+      register: galaxy_id
+
     - name: render template
       template:
         src: "{{ playbook_dir }}/templates/README.md.j2"
