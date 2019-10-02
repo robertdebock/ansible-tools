@@ -1,6 +1,6 @@
 #!/bin/sh
 
-for scenario in fedora-{latest,rawhide} ubuntu-{rolling,latest,devel} debian-stable debian-unstable; do
+for scenario in alpine-{latest,edge} centos-latest fedora-{latest,rawhide} ubuntu-{rolling,latest,devel} debian-stable debian-unstable; do
   if [ -f molecule/${scenario}/molecule.yml ] ; then
     grep "ansible_python_interpreter" molecule/${scenario}/molecule.yml > /dev/null
     if [ "$?" = "1" ] ; then
@@ -9,7 +9,7 @@ for scenario in fedora-{latest,rawhide} ubuntu-{rolling,latest,devel} debian-sta
   fi
 done
 
-rolename=$(basename $(echo $(pwd) | cut -d- -f 3))
+#rolename=$(basename $(echo $(pwd) | cut -d- -f 3))
 
 # for scenario in default ; do
 #   grep "ansible_python_interpreter"  molecule/${scenario}/molecule.yml
