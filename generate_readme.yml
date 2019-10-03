@@ -103,6 +103,7 @@
     - name: load ansible galaxy id
       shell: "ansible-galaxy info robertdebock.{{ role_name }} | grep '	id: ' | awk '{print $NF}'"
       register: galaxy_id
+      changed_when: no
 
     - name: render template
       template:
