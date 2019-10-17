@@ -78,17 +78,17 @@
 
     - name: load example
       slurp:
-        src: "{{ role_path }}/molecule/resources/playbook.yml"
+        src: "{{ role_path }}/molecule/default/playbook.yml"
       register: example
 
     - name: check if prepare.yml exists
       stat:
-        path: "{{ role_path }}/molecule/resources/prepare.yml"
+        path: "{{ role_path }}/molecule/default/prepare.yml"
       register: check_prepare
 
     - name: load prepare
       slurp:
-        src: "{{ role_path }}/molecule/resources/prepare.yml"
+        src: "{{ role_path }}/molecule/default/prepare.yml"
       register: prepare
       when:
         - check_prepare.stat.exists | bool

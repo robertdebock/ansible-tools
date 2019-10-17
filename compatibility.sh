@@ -1,30 +1,25 @@
-#!/bin/sh -x
+#!/bin/sh
 
-echo "This role has been tested against the following distributions and Ansible version:"
+echo "This role has been tested on these [container images](https://hub.docker.com/):"
 echo ""
-echo "|distribution|ansible 2.7|ansible 2.8|ansible devel|"
-echo "|------------|-----------|-----------|-------------|"
-cat .travis.yml | docker run -i --rm jlordiales/jyparser get ".env" | while read dash version distro rest ; do
-  echo "${distro}" | cut -d\" -f2 | sort | uniq | while read distribution ; do
-  case "${distribution}" in
-    alpine-edge)
-      distribution='alpine-edge*'
-    ;;
-    debian-unstable)
-      distribution='debian-unstable*'
-    ;;
-    fedora-rawhide)
-      distribution='fedora-rawhide*'
-    ;;
-    ubuntu-devel)
-      distribution='ubuntu-devel*'
-    ;;
-  esac
-  grep "${distribution}" .travis.yml | grep -v 'fail' | grep '>=2.7,<2.8' > /dev/null && previous=yes || previous=no
-  grep "${distribution}" .travis.yml | grep -v 'fail' | grep 'version=\"\"' > /dev/null && current=yes || current=no
-  grep "${distribution}" .travis.yml | grep -v 'fail' | grep 'version=\"devel\"' > /dev/null && devel='yes*' || devel='no*'
-  echo "|${distribution}|${previous}|${current}|${devel}|"
- done
-done | sort | uniq
+echo "|container|allow_failures|"
+echo "|---------|--------------|"
+
+cat .travis.yml | docker run -i --rm jlordiales/jyparser get ".env.matrix" | while read dash distribution rest ; do
+  distribution=$(echo ${distribution} | cut -d\" -f2)
+  allow_failures=$(cat .travis.yml | docker run -i --rm jlordiales/jyparser get .matrix.allow_failures | grep ${distribution} > /dev/null 2>&1 ; if [ "$?" == 0 ] ; then echo "yes" ; else echo "no" ; fi)
+  echo "|${distribution}|${allow_failures}|"
+done
+
 echo
-echo "A single star means the build may fail, it's marked as an experimental build."
+
+echo "This role has been tested on these Ansible versions:"
+echo
+
+echo "- $(grep '    previous' tox.ini | awk '{print $2}')"
+echo "- $(grep '    current' tox.ini | awk '{print $2}')"
+echo "- $(grep '    next' tox.ini | awk '{print $2}')"
+
+echo 
+
+echo "The indicator '~=' means [compatible with](https://www.python.org/dev/peps/pep-0440/#compatible-release). For example 'ansible~=2.8' would pick the latest ansible-2.8, for example ansible-2.8.5."
