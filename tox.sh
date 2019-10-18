@@ -36,8 +36,8 @@ echo "  - docker" >> .travis.yml
 echo "" >> .travis.yml
 echo "env:" >> .travis.yml
 echo "  matrix:" >> .travis.yml
-echo "    - distribution=\"alpine:latest\"" >> .travis.yml
-echo "    - distribution=\"alpine:edge\"" >> .travis.yml
+echo "    - distribution=\"robertdebock/docker-alpine-openrc:latest\"" >> .travis.yml
+echo "    - distribution=\"robertdebock/docker-alpine-openrc:edge\"" >> .travis.yml
 echo "    - distribution=\"archlinux/base\"" >> .travis.yml
 echo "    - distribution=\"robertdebock/docker-centos-systemd:7\"" >> .travis.yml
 echo "    - distribution=\"robertdebock/docker-centos-systemd:latest\"" >> .travis.yml
@@ -63,7 +63,6 @@ echo "  - pip" >> .travis.yml
 echo "" >> .travis.yml
 echo "install:" >> .travis.yml
 echo "  - pip install --upgrade pip" >> .travis.yml
-echo "  - pip install molecule" >> .travis.yml
 echo "  - pip install tox" >> .travis.yml
 echo "" >> .travis.yml
 echo "script:" >> .travis.yml
@@ -88,7 +87,7 @@ echo "  name: yamllint" >> molecule/default/molecule.yml
 echo "driver:" >> molecule/default/molecule.yml
 echo "  name: docker" >> molecule/default/molecule.yml
 echo "platforms:" >> molecule/default/molecule.yml
-echo "  - name: \"instance-\${TOX_ENVNAME:-default}\"" >> molecule/default/molecule.yml
+echo "  - name: \"\${distribution:-default}-\${TOX_ENVNAME:-default}\"" >> molecule/default/molecule.yml
 echo "    image: \"\${distribution:-robertdebock/docker-fedora-systemd:latest}\"" >> molecule/default/molecule.yml
 echo "    command: sh -c \"while true ; do sleep 30 ; done\"" >> molecule/default/molecule.yml
 echo "    pre_build_image: yes" >> molecule/default/molecule.yml
@@ -123,10 +122,11 @@ echo "    molecule test" >> tox.ini
 echo "setenv =" >> tox.ini
 echo "    TOX_ENVNAME={envname}" >> tox.ini
 echo "    MOLECULE_EPHEMERAL_DIRECTORY=/tmp/{envname}" >> tox.ini
+echo "passenv = distribution" >> tox.ini
 }
 
 add_tox_ini_to_git_ignore() {
-grep .tox .gitignore 2> /dev/null || echo ".tox" >> .gitignore
+grep .tox .gitignore 2> /dev/null 1>&2 || echo ".tox" >> .gitignore
 }
 
 move_playbooks_to_default
