@@ -1,0 +1,28 @@
+#!/usr/bin/env ansible-playbook
+---
+- name: generate a README.md, github/settings.yml, LICENSE and CONTRIBUTING.md
+  hosts: localhost
+  become: no
+  gather_facts: yes
+
+  tasks:
+    - name: set role_path and role_name
+      set_fact:
+        role_path: "{{ lookup('env', 'PWD') }}"
+        role_name: "{{ lookup('env', 'PWD') | basename | regex_replace('ansible-role-') }}"
+
+    - name: load meta
+      include_vars:
+        file: "{{ role_path }}/meta/main.yml"
+        name: meta
+
+    - name: save travis secure value
+      include_vars:
+        file: "{{ role_path }}/.travis.yml"
+        name: travis
+
+    - name: generate .travis.yml
+      template:
+        src: "{{ playbook_dir }}/templates/travis.yml.j2"
+        dest: "{{ role_path }}/.travis.yml"
+

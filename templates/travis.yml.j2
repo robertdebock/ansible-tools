@@ -1,0 +1,75 @@
+---
+language: python
+
+python:
+  - "3.7"
+
+services:
+  - docker
+
+env:
+  global:
+    - namespace="robertdebock/"
+  matrix:
+{% for platform in meta.galaxy_info.platforms %}
+{% if platform.name == "Alpine" %}
+    - image="docker-alpine-openrc"
+    - image="docker-alpine-openrc" tag="edge"
+{% endif %}
+{% if platform.name =="ArchLinux" %}
+    # - namespace="archlinux/" image="base"
+{% endif %}
+{% if platform.name =="Debian" %}
+    - image="docker-debian-systemd" tag="stable"
+    - image="docker-debian-systemd" tag="unstable"
+    - image="docker-debian-systemd"
+{% endif %}
+{% if platform.name == "OpenSUSE" %}
+    - namespace="opensuse/" image="leap"
+{% endif %}
+{% if platform.name == "Ubuntu" %}
+    - image="docker-ubuntu-systemd" tag="rolling"
+    - image="docker-ubuntu-systemd" tag="devel"
+    - image="docker-ubuntu-systemd"
+{% endif %}
+{% if platform.name == "EL" %}
+{% for version in platform.versions %}
+{% if version != 8 %}
+    - image="docker-centos-systemd" tag="{{ version }}"
+    - image="docker-redhat-systemd" tag="{{ version }}"
+{% endif %}
+{% if version == 8 %}
+    - image="docker-centos-systemd"
+    - image="docker-redhat-systemd"
+{% endif %}
+{% endfor %}
+{% endif %}
+{% if platform.name == "Fedora" %}
+    - image="docker-fedora-systemd"
+    - image="docker-fedora-systemd" tag="rawhide"
+{% endif %}
+{% endfor %}
+
+matrix:
+  allow_failures:
+    - env: image="docker-alpine-openrc" tag="edge"
+    - env: image="docker-debian-systemd" tag="unstable"
+    - env: image="docker-fedora-systemd" tag="rawhide"
+    - env: image="docker-ubuntu-systemd" tag="rolling"
+    - env: image="docker-ubuntu-systemd" tag="devel"
+
+cache:
+  - pip
+
+install:
+  - pip install --upgrade pip
+  - pip install tox
+
+script:
+  - tox --parallel all
+
+notifications:
+  webhooks: https://galaxy.ansible.com/api/v1/notifications/
+  slack:
+    secure: "{{ travis.notifications.slack.secure }}"
+  email: false
