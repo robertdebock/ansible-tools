@@ -2,13 +2,14 @@
 
 echo "This role has been tested on these [container images](https://hub.docker.com/):"
 echo ""
-echo "|container|allow_failures|"
-echo "|---------|--------------|"
+echo "|container|tag|allow_failures|"
+echo "|---------|---|--------------|"
 
-cat .travis.yml | docker run -i --rm jlordiales/jyparser get ".env.matrix" | while read dash distribution rest ; do
+cat .travis.yml | docker run -i --rm jlordiales/jyparser get ".env.matrix" | while read dash distribution tag rest ; do
   distribution=$(echo ${distribution} | cut -d\" -f2)
-  allow_failures=$(cat .travis.yml | docker run -i --rm jlordiales/jyparser get .matrix.allow_failures | grep ${distribution} > /dev/null 2>&1 ; if [ "$?" == 0 ] ; then echo "yes" ; else echo "no" ; fi)
-  echo "|${distribution}|${allow_failures}|"
+  tag=$(echo ${tag} | cut -d\" -f2)
+  allow_failures=$(cat .travis.yml | docker run -i --rm jlordiales/jyparser get .matrix.allow_failures | grep ${distribution} | grep ${tag} > /dev/null 2>&1 ; if [ "$?" == 0 ] ; then echo "yes" ; else echo "no" ; fi)
+  echo "|${distribution}|${tag:-latest}|${allow_failures}|"
 done
 
 echo
@@ -22,4 +23,4 @@ echo "- $(grep '    next' tox.ini | awk '{print $2}')"
 
 echo 
 
-echo "The indicator '~=' means [compatible with](https://www.python.org/dev/peps/pep-0440/#compatible-release). For example 'ansible~=2.8' would pick the latest ansible-2.8, for example ansible-2.8.5."
+echo "The indicator '\~=' means [compatible with](https://www.python.org/dev/peps/pep-0440/#compatible-release). For example 'ansible\~=2.8' would pick the latest ansible-2.8, for example ansible-2.8.6."

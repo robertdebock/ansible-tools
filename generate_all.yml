@@ -1,0 +1,160 @@
+#!/usr/bin/env ansible-playbook
+---
+- name: generate a README.md, github/settings.yml, LICENSE and CONTRIBUTING.md
+  hosts: localhost
+  become: no
+  gather_facts: yes
+
+  tasks:
+    - name: set role_path and role_name
+      set_fact:
+        role_path: "{{ lookup('env', 'PWD') }}"
+        role_name: "{{ lookup('env', 'PWD') | basename | regex_replace('ansible-role-') }}"
+
+    - name: load meta
+      include_vars:
+        file: "{{ role_path }}/meta/main.yml"
+        name: meta
+
+    - name: see if logo.png exists
+      stat:
+        path: "{{ role_path }}/meta/logo.png"
+      register: logo
+
+    - name: see if version.yml exists
+      stat:
+        path: "{{ role_path }}/meta/version.yml"
+      register: versionymlstat
+
+    - name: load meta/version.yml
+      include_vars:
+        file: "{{ role_path }}/meta/version.yml"
+      register: versionyml
+      when:
+        - versionymlstat.stat.exists
+
+    - name: see if exception.yml exists
+      stat:
+        path: "{{ role_path }}/meta/exception.yml"
+      register: exceptionymlstat
+
+    - name: load meta/exception.yml
+      include_vars:
+        file: "{{ role_path }}/meta/exception.yml"
+      register: exceptionyml
+      when:
+        - exceptionymlstat.stat.exists
+
+    - name: load defaults/main.yml
+      slurp:
+        src: "{{ role_path }}/defaults/main.yml"
+      register: variables
+
+    - name: check if requirements.yml exists
+      stat:
+        path: "{{ role_path }}/requirements.yml"
+      register: check_requirements
+
+    - name: load requirements
+      slurp:
+        src: "{{ role_path }}/requirements.yml"
+      register: requirements
+      when:
+        - check_requirements.stat.exists
+
+    - name: set no requirements when none exist
+      set_fact:
+        requirements:
+          content: "{{ '- none' | b64encode }}"
+      when:
+        - not check_requirements.stat.exists
+
+    - name: load example
+      slurp:
+        src: "{{ role_path }}/molecule/default/playbook.yml"
+      register: example
+
+    - name: check if prepare.yml exists
+      stat:
+        path: "{{ role_path }}/molecule/default/prepare.yml"
+      register: check_prepare
+
+    - name: load prepare
+      slurp:
+        src: "{{ role_path }}/molecule/default/prepare.yml"
+      register: prepare
+      when:
+        - check_prepare.stat.exists | bool
+
+    - name: generate modules.yml
+      command: "{{ playbook_dir }}/generate_modules.sh"
+      args:
+        chdir: "{{ role_path }}"
+      register: modules
+      changed_when: no
+
+    - name: load ansible galaxy id
+      shell: "ansible-galaxy info robertdebock.{{ role_name }} | grep '	id: ' | awk '{print $NF}'"
+      register: galaxy_id
+      changed_when: no
+
+    - name: create .github
+      file:
+        path: "{{ role_path }}/.github"
+        state: directory
+
+    - name: render .github/settings.yml
+      template:
+        src: "{{ playbook_dir }}/templates/settings.yml.j2"
+        dest: "{{ role_path }}/.github/settings.yml"
+
+    - name: set author variables
+      set_fact:
+        author: Robert de Bock (robert@meinit.nl)
+
+    - name: render LICENSE
+      template:
+        src: "{{ playbook_dir }}/templates/LICENSE-2.0.txt.j2"
+        dest: "{{ role_path }}/LICENSE"
+
+    - name: place CONTRIBUTING.md
+      copy:
+        src: "{{ playbook_dir }}/files/CONTRIBUTING.md"
+        dest: "{{ role_path }}/CONTRIBUTING.md"
+
+    - name: render SECURITY.md
+      template:
+        src: "{{ playbook_dir }}/templates/SECURITY.md.j2"
+        dest: "{{ role_path }}/SECURITY.md"
+
+    - name: save travis secure value
+      include_vars:
+        file: "{{ role_path }}/.travis.yml"
+        name: travis
+
+    - name: generate .travis.yml
+      template:
+        src: "{{ playbook_dir }}/templates/travis.yml.j2"
+        dest: "{{ role_path }}/.travis.yml"
+
+    - name: load compatibility
+      command: "{{ playbook_dir }}/compatibility.sh"
+      args:
+        chdir: "{{ role_path }}"
+      register: compatibility
+      changed_when: no
+
+    - name: see if molecule/default/verify.yml exists
+      stat:
+        path: "{{ role_path }}/molecule/default/verify.yml"
+      register: verify
+
+    - name: generate generic molecule.yml
+      template:
+        src: "molecule.yml.j2"
+        dest: "{{ role_path }}/molecule/default/molecule.yml"
+
+    - name: render template
+      template:
+        src: "{{ playbook_dir }}/templates/README.md.j2"
+        dest: "{{ role_path }}/README.md"
