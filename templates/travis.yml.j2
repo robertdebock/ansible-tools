@@ -8,43 +8,44 @@ services:
   - docker
 
 env:
+  global:
+    namespace="robertdebock"
   matrix:
 {% for platform in meta.galaxy_info.platforms %}
 {% if platform.name == "Alpine" %}
-    - image="docker-alpine-openrc"
-    - image="docker-alpine-openrc" tag="edge"
+    - image="alpine"
+    - image="alpine" tag="edge"
 {% endif %}
 {% if platform.name =="ArchLinux" %}
-    # - namespace="archlinux/" image="base"
+    # - namespace="archlinux" image="base"
 {% endif %}
 {% if platform.name =="Debian" %}
-    - image="docker-debian-systemd" tag="stable"
-    - image="docker-debian-systemd" tag="unstable"
-    - image="docker-debian-systemd"
+    - image="debian" tag="stable"
+    - image="debian" tag="unstable"
+    - image="debian"
 {% endif %}
 {% if platform.name == "OpenSUSE" %}
-    - image="docker-opensuse-systemd"
+    - image="opensuse"
 {% endif %}
 {% if platform.name == "Ubuntu" %}
-    - image="docker-ubuntu-systemd" tag="rolling"
-    - image="docker-ubuntu-systemd" tag="devel"
-    - image="docker-ubuntu-systemd"
+    - image="ubuntu" tag="rolling"
+    - image="ubuntu" tag="devel"
+    - image="ubuntu"
 {% endif %}
 {% if platform.name == "EL" %}
 {% for version in platform.versions %}
 {% if version != 8 %}
-    - image="docker-centos-systemd" tag="{{ version }}"
-    - image="docker-redhat-systemd" tag="{{ version }}"
-{% endif %}
-{% if version == 8 %}
-    - image="docker-centos-systemd"
-    - image="docker-redhat-systemd"
+    - image="centos" tag="{{ version }}"
+    - image="redhat" tag="{{ version }}"
+{% else %}
+    - image="centos"
+    - image="redhat"
 {% endif %}
 {% endfor %}
 {% endif %}
 {% if platform.name == "Fedora" %}
-    - image="docker-fedora-systemd"
-    - image="docker-fedora-systemd" tag="rawhide"
+    - image="fedora"
+    - image="fedora" tag="rawhide"
 {% endif %}
 {% endfor %}
 
@@ -52,17 +53,17 @@ matrix:
   allow_failures:
 {% for platform in meta.galaxy_info.platforms %}
 {% if platform.name == "Alpine" %}
-    - env: image="docker-alpine-openrc" tag="edge"
+    - env: image="alpine" tag="edge"
 {% endif %}
 {% if platform.name =="Debian" %}
-    - env: image="docker-debian-systemd" tag="unstable"
+    - env: image="debian" tag="unstable"
 {% endif %}
 {% if platform.name == "Fedora" %}
-    - env: image="docker-fedora-systemd" tag="rawhide"
+    - env: image="fedora" tag="rawhide"
 {% endif %}
 {% if platform.name == "Ubuntu" %}
-    - env: image="docker-ubuntu-systemd" tag="rolling"
-    - env: image="docker-ubuntu-systemd" tag="devel"
+    - env: image="ubuntu" tag="rolling"
+    - env: image="ubuntu" tag="devel"
 {% endif %}
 {% endfor %}
 
