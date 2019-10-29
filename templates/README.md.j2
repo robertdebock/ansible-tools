@@ -96,22 +96,27 @@ Testing is done using [Tox](https://tox.readthedocs.io/en/latest/) and [Molecule
 [Tox](https://tox.readthedocs.io/en/latest/) tests multiple ansible versions.
 [Molecule](https://github.com/ansible/molecule) tests multiple distributions.
 
-To test using the defaults (any installed ansible version, the latest Fedora release):
+To test using the defaults (any installed ansible version, namespace: `robertdebock`, image: `fedora`, tag: `latest`):
 
 ```
 molecule test
-```
 
-You can also select an container image or distribution to test on:
-
-```
+# Or select a specific image:
 image=ubuntu molecule test
+# Or select a specific image and a specific tag:
+image="debian" tag="stable" tox
 ```
 
-Or you can test multiple versions of Ansible:
+Or you can test multiple versions of Ansible, and select images:
+Tox allows multiple versions of Ansible to be tested. To run the default (namespace: `robertdebock`, image: `fedora`, tag: `latest`) tests:
 
 ```
 tox
+
+# To run CentOS (namespace: `robertdebock`, tag: `latest`)
+image="centos" tox
+# Or customize more:
+image="debian" tag="stable" tox
 ```
 
 Modules
