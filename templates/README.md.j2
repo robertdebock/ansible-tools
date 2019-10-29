@@ -47,11 +47,6 @@ The following roles can be installed to ensure all requirements are met, using `
 {{ requirements.content | b64decode }}
 ```
 
-This role uses the following modules:
-```yaml
-{{ modules.stdout }}
-```
-
 Context
 -------
 
@@ -92,19 +87,40 @@ This version reference means a role may get outdated. Monthly tests occur to see
 Testing
 -------
 
-[Unit tests](https://travis-ci.org/robertdebock/ansible-role-{{ role_name }}) are done on every commit and periodically.
+[Unit tests](https://travis-ci.org/robertdebock/ansible-role-{{ role_name }}) are done on every commit, pull request, release and periodically.
 
 If you find issues, please register them in [GitHub](https://github.com/robertdebock/ansible-role-{{ role_name }}/issues)
 
-To test this role locally please use [Molecule](https://github.com/ansible/molecule):
+Testing is done using [Tox](https://tox.readthedocs.io/en/latest/) and [Molecule](https://github.com/ansible/molecule):
+
+[Tox](https://tox.readthedocs.io/en/latest/) tests multiple ansible versions.
+[Molecule](https://github.com/ansible/molecule) tests multiple distributions.
+
+To test using the defaults (any installed ansible version, the latest Fedora release):
+
 ```
-pip install molecule
 molecule test
 ```
 
-To test on Amazon EC2, configure [~/.aws/credentials](https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/credentials.html) and set a region using `export AWS_REGION=eu-central-1` before running `molecule test --scenario-name ec2`.
+You can also select an container image or distribution to test on:
 
-There are many specific scenarios available, please have a look in the `molecule/` directory.
+```
+image=ubuntu molecule test
+```
+
+Or you can test multiple versions of Ansible:
+
+```
+tox
+```
+
+Modules
+-------
+
+This role uses the following modules:
+```yaml
+{{ modules.stdout }}
+```
 
 License
 -------

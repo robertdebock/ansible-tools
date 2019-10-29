@@ -35,11 +35,23 @@ env:
 {% if platform.name == "EL" %}
 {% for version in platform.versions %}
 {% if version != 8 %}
-    - image="centos" tag="{{ version }}"
+{% for tag in meta.galaxy_info.galaxy_tags %}
+{% if tag == "redhat" %}
     - image="redhat" tag="{{ version }}"
+{% endif %}
+{% if tag == "centos" %}
+    - image="centos" tag="{{ version }}"
+{% endif %}
+{% endfor %}
 {% else %}
-    - image="centos"
+{% for tag in meta.galaxy_info.galaxy_tags %}
+{% if tag == "redhat" %}
     - image="redhat"
+{% endif %}
+{% if tag == "centos" %}
+    - image="centos"
+{% endif %}
+{% endfor %}
 {% endif %}
 {% endfor %}
 {% endif %}
