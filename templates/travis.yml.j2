@@ -12,6 +12,10 @@ env:
     namespace="robertdebock"
   matrix:
 {% for platform in meta.galaxy_info.platforms %}
+{% if platform.name == "Amazon" %}
+    - image="amazonlinux" tag="1"
+    - image="amazonlinux"
+{% endif %}
 {% if platform.name == "Alpine" %}
     - image="alpine"
     - image="alpine" tag="edge"
@@ -42,6 +46,9 @@ env:
 {% if tag == "centos" %}
     - image="centos" tag="{{ version }}"
 {% endif %}
+{% if tag == "oraclelinux" %}
+    - image="oraclelinux" tag="{{ version }}"
+{% endif %}
 {% endfor %}
 {% else %}
 {% for tag in meta.galaxy_info.galaxy_tags %}
@@ -50,6 +57,9 @@ env:
 {% endif %}
 {% if tag == "centos" %}
     - image="centos"
+{% endif %}
+{% if tag == "oraclelinux" %}
+    - image="oraclelinux"
 {% endif %}
 {% endfor %}
 {% endif %}
