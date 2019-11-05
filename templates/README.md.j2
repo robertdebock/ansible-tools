@@ -3,12 +3,9 @@
 
 <img src="https://docs.ansible.com/ansible-tower/3.2.4/html_ja/installandreference/_static/images/logo_invert.png" width="10%" height="10%" alt="Ansible logo" align="right"/>{% if logo.stat.exists %}<img src="https://raw.githubusercontent.com/robertdebock/ansible-role-{{ role_name }}/master/meta/logo.png" alt="Project logo" width="40" height="40" align="left"/>{% endif %}
 
-<a href="https://travis-ci.org/robertdebock/ansible-role-{{ role_name }}"><img src="https://travis-ci.org/robertdebock/ansible-role-{{ role_name }}.svg?branch=master" alt="Build status" align="left"/></a>
+<a href="https://travis-ci.org/robertdebock/ansible-role-{{ role_name }}"> <img src="https://travis-ci.org/robertdebock/ansible-role-{{ role_name }}.svg?branch=master" alt="Build status"/></a> <img src="https://img.shields.io/ansible/role/d/{{ galaxy_id.stdout }}"/> <img src="https://img.shields.io/ansible/quality/{{ galaxy_id.stdout }}"/>
 
 {{ meta.galaxy_info.description }}
-
-<img src="https://img.shields.io/ansible/role/d/{{ galaxy_id.stdout }}"/>
-<img src="https://img.shields.io/ansible/quality/{{ galaxy_id.stdout }}"/>
 
 Example Playbook
 ----------------
