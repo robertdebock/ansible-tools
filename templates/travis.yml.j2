@@ -24,7 +24,6 @@ env:
     # - namespace="archlinux" image="base"
 {% endif %}
 {% if platform.name =="Debian" %}
-    - image="debian" tag="stable"
     - image="debian" tag="unstable"
     - image="debian"
 {% endif %}
@@ -32,8 +31,6 @@ env:
     - image="opensuse"
 {% endif %}
 {% if platform.name == "Ubuntu" %}
-    - image="ubuntu" tag="rolling"
-    - image="ubuntu" tag="devel"
     - image="ubuntu"
 {% endif %}
 {% if platform.name == "EL" %}
