@@ -86,6 +86,11 @@
       when:
         - check_prepare.stat.exists | bool
 
+    - name: place tox.ini
+      template:
+        src: "{{ playbook_dir}}/templates/tox.ini.j2"
+        dest: "{{ role_path }}/tox.ini"
+
     - name: generate modules.yml
       command: "{{ playbook_dir }}/generate_modules.sh"
       args:

@@ -17,10 +17,8 @@ echo
 echo "This role has been tested on these Ansible versions:"
 echo
 
-echo "- $(grep '    previous' tox.ini | awk '{print $2}')"
+echo "- $(grep '    previous' tox.ini | awk '{print $2, $3}')"
 echo "- $(grep '    current' tox.ini | awk '{print $2}')"
 echo "- $(grep '    next' tox.ini | awk '{print $2}')"
 
 echo 
-
-echo "The indicator '\~=' means [compatible with](https://www.python.org/dev/peps/pep-0440/#compatible-release). For example 'ansible\~=2.8' would pick the latest ansible-2.8, for example ansible-2.8.6."

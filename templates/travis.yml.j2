@@ -80,10 +80,6 @@ matrix:
 {% if platform.name == "Fedora" %}
     - env: image="fedora" tag="rawhide"
 {% endif %}
-{% if platform.name == "Ubuntu" %}
-    - env: image="ubuntu" tag="rolling"
-    - env: image="ubuntu" tag="devel"
-{% endif %}
 {% endfor %}
 
 cache:
