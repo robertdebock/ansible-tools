@@ -13,8 +13,14 @@ env:
   matrix:
 {% for platform in meta.galaxy_info.platforms %}
 {% if platform.name == "Amazon" %}
+{% for version in platform.versions %}
+{% if version == "1" or version == "all" %}
     - image="amazonlinux" tag="1"
+{% endif %}
+{% if version == "Candidate" or version == "all" %}
     - image="amazonlinux"
+{% endif %}
+{% endfor %}
 {% endif %}
 {% if platform.name == "Alpine" %}
     - image="alpine"
