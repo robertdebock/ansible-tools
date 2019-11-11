@@ -47,7 +47,7 @@
 
     - name: see if defaults/main.yml exists
       stat:
-        path: "{{ role_path }}/meta/exception.yml"
+        path: "{{ role_path }}/defaults/main.yml"
       register: defaultsmainyml
 
     - name: load defaults/main.yml
