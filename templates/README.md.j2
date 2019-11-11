@@ -25,12 +25,14 @@ No preparation required.
 
 Also see a [full explanation and example](https://robertdebock.nl/how-to-use-these-roles.html) on how to use these roles.
 
+{% if variables.content is defined %}
 Role Variables
 --------------
 
 These variables are set in `defaults/main.yml`:
 ```yaml
 {{ variables.content | b64decode }}```
+{% endif %}
 
 Requirements
 ------------

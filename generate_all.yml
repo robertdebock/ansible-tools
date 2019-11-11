@@ -45,10 +45,17 @@
       when:
         - exceptionymlstat.stat.exists
 
+    - name: see if defaults/main.yml exists
+      stat:
+        path: "{{ role_path }}/meta/exception.yml"
+      register: defaultsmainyml
+
     - name: load defaults/main.yml
       slurp:
         src: "{{ role_path }}/defaults/main.yml"
       register: variables
+      when:
+        - defaultsmainyml.stat.exists
 
     - name: check if requirements.yml exists
       stat:
