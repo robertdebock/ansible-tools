@@ -161,6 +161,13 @@
         path: "{{ role_path }}/molecule/default/verify.yml"
       register: verify
 
+    - name: load verify.yml
+      slurp:
+        src: "{{ role_path }}/molecule/default/verify.yml"
+      register: verifyyml
+      when:
+        - verify.stat.exists
+
     - name: generate generic molecule.yml
       template:
         src: "molecule.yml.j2"

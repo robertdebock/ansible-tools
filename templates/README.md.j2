@@ -21,6 +21,15 @@ The machine you are running this on, may need to be prepared.
 {% else %}
 No preparation required.
 ```
+
+{% if verifyyml is defined %}
+A example use of the role or what you can do after applying the role.
+```yaml
+{{ verifyyml.content | b64decode | regex_replace('ansible-role-', 'robertdebock.') }}}
+```
+
+{% endif %}
+
 {% endif %}
 
 Also see a [full explanation and example](https://robertdebock.nl/how-to-use-these-roles.html) on how to use these roles.
