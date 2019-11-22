@@ -115,7 +115,7 @@
         path: "{{ role_path }}/.github"
         state: directory
 
-    - name: render .github/settings.yml
+    - name: place .github/settings.yml
       template:
         src: "{{ playbook_dir }}/templates/settings.yml.j2"
         dest: "{{ role_path }}/.github/settings.yml"
@@ -124,7 +124,7 @@
       set_fact:
         author: Robert de Bock (robert@meinit.nl)
 
-    - name: render LICENSE
+    - name: place LICENSE
       template:
         src: "{{ playbook_dir }}/templates/LICENSE-2.0.txt.j2"
         dest: "{{ role_path }}/LICENSE"
@@ -134,7 +134,7 @@
         src: "{{ playbook_dir }}/files/CONTRIBUTING.md"
         dest: "{{ role_path }}/CONTRIBUTING.md"
 
-    - name: render SECURITY.md
+    - name: place SECURITY.md
       template:
         src: "{{ playbook_dir }}/templates/SECURITY.md.j2"
         dest: "{{ role_path }}/SECURITY.md"
@@ -144,7 +144,7 @@
         file: "{{ role_path }}/.travis.yml"
         name: travis
 
-    - name: generate .travis.yml
+    - name: place .travis.yml
       template:
         src: "{{ playbook_dir }}/templates/travis.yml.j2"
         dest: "{{ role_path }}/.travis.yml"
@@ -168,12 +168,12 @@
       when:
         - verify.stat.exists
 
-    - name: generate generic molecule.yml
+    - name: place molecule.yml
       template:
         src: "molecule.yml.j2"
         dest: "{{ role_path }}/molecule/default/molecule.yml"
 
-    - name: render template
+    - name: place READEME.md
       template:
         src: "{{ playbook_dir }}/templates/README.md.j2"
         dest: "{{ role_path }}/README.md"
