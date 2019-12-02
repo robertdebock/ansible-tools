@@ -31,7 +31,7 @@
         file: "{{ role_path }}/meta/version.yml"
       register: versionyml
       when:
-        - versionymlstat.stat.exists
+        - versionymlstat.stat.exists | bool
 
     - name: see if exception.yml exists
       stat:
@@ -43,7 +43,7 @@
         file: "{{ role_path }}/meta/exception.yml"
       register: exceptionyml
       when:
-        - exceptionymlstat.stat.exists
+        - exceptionymlstat.stat.exists | bool
 
     - name: see if defaults/main.yml exists
       stat:
@@ -55,7 +55,7 @@
         src: "{{ role_path }}/defaults/main.yml"
       register: variables
       when:
-        - defaultsmainyml.stat.exists
+        - defaultsmainyml.stat.exists | bool
 
     - name: check if requirements.yml exists
       stat:
@@ -67,7 +67,7 @@
         src: "{{ role_path }}/requirements.yml"
       register: requirements
       when:
-        - check_requirements.stat.exists
+        - check_requirements.stat.exists | bool
 
     - name: set no requirements when none exist
       set_fact:
@@ -166,14 +166,14 @@
         src: "{{ role_path }}/molecule/default/verify.yml"
       register: verifyyml
       when:
-        - verify.stat.exists
+        - verify.stat.exists | bool
 
     - name: place molecule.yml
       template:
         src: "molecule.yml.j2"
         dest: "{{ role_path }}/molecule/default/molecule.yml"
 
-    - name: place READEME.md
+    - name: place README.md
       template:
         src: "{{ playbook_dir }}/templates/README.md.j2"
         dest: "{{ role_path }}/README.md"
