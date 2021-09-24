@@ -45,6 +45,15 @@
       when:
         - exceptionymlstat.stat.exists | bool
 
+    - name: see if meta/preferences.yml exists
+      stat:
+        path: "{{ role_path }}/meta/preferences.yml"
+      register: preferencesymlstat
+
+    - name: load meta/preferences.yml
+      include_vars:
+        file: "{{ role_path }}/meta/preferences.yml"
+
     - name: see if defaults/main.yml exists
       stat:
         path: "{{ role_path }}/defaults/main.yml"
@@ -172,6 +181,11 @@
       template:
         src: "molecule.yml.j2"
         dest: "{{ role_path }}/molecule/default/molecule.yml"
+
+    - name: place .ansible-lint
+      copy:
+        src: "{{ playbook_dir }}/files/ansible-lint"
+        dest: "{{ role_path }}/.ansible-lint"
 
     - name: place README.md
       template:
