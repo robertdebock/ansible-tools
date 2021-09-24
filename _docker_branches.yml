@@ -1,0 +1,7 @@
+---
+
+- name: checkout branch
+  include_tasks: _branch_looper.yml
+  loop: "{{ repository.branches }}"
+  loop_control:
+    loop_var: branch

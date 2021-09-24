@@ -1,0 +1,37 @@
+---
+
+- debug:
+    msg: "working on {{ repository.name }} - {{ branch.name }}"
+
+- name: git checkout version
+  git:
+    repo: "{{ base_repo_url }}/{{ repository.name }}.git"
+    dest: "{{ base_directory }}/{{ repository.name }}"
+    version: "{{ branch.name }}"
+
+- name: change the label in the Dockerfile
+  lineinfile:
+    path: "{{ base_directory }}/{{ repository.name }}/Dockerfile"
+    regexp: '^LABEL build_date='
+    line: LABEL build_date="{{ ansible_date_time.date }}"
+    insertafter: '^LABEL '
+  register: change_label
+
+- name: git stuff
+  block:
+    - name: git add
+      command:
+        cmd: git add Dockerfile
+        chdir: "{{ base_directory }}/{{ repository.name }}"
+
+    - name: git commit
+      command:
+        cmd: git commit --message "Update build_date label"
+        chdir: "{{ base_directory }}/{{ repository.name }}"
+
+    - name: git push
+      command:
+        cmd: git push
+        chdir: "{{ base_directory }}/{{ repository.name }}"
+  when:
+    - change_label is changed

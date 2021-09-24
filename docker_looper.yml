@@ -1,0 +1,88 @@
+#!/usr/bin/env ansible-playbook
+
+- name: loop over directories and branches
+  hosts: localhost
+  become: no
+  gather_facts: yes
+
+  vars:
+    base_directory: /Users/robertdb/Documents/github.com/robertdebock
+    base_repo_url: git@github.com:robertdebock
+    docker_repositories:
+      - name: docker-alpine-openrc
+        branches:
+          - name: master
+      - name: docker-amazonlinux-systemd
+        branches:
+          - name: "1"
+          - name: master
+      - name: docker-archlinux-systemd
+        branches:
+          - name: master
+      - name: docker-centos-openssh
+        branches:
+          - name: master
+      - name: docker-cntlm
+        branches:
+          - name: master
+      - name: docker-debian-systemd
+        branches:
+          - name: bookworm
+          - name: bullseye
+          - name: master
+      - name: docker-fedora-systemd
+        branches:
+          - name: "33"
+          - name: master
+          - name: rawhide
+      - name: docker-github-action-galaxy
+        branches:
+          - name: master
+      - name: docker-github-action-graphviz
+        branches:
+          - name: master
+      - name: docker-github-action-molecule
+        branches:
+          - name: master
+      - name: docker-github-action-rpmbuild
+        branches:
+          - name: centos-7
+          - name: centos-8
+          - name: fedora-31
+          - name: fedora-32
+          - name: fedora-33
+          - name: fedora-34
+          - name: master
+          - name: rockylinux-8
+      - name: docker-opensuse-systemd
+        branches:
+          - name: master
+      - name: docker-oraclelinux-systemd
+        branches:
+          - name: "7"
+          - name: master
+      - name: docker-redhat-systemd
+        branches:
+          - name: "7"
+          - name: master
+      - name: docker-revealmd
+        branches:
+          - name: master
+      - name: docker-rockylinux-systemd
+        branches:
+          - name: master
+      - name: docker-terraform
+        branches:
+          - name: master
+      - name: docker-ubuntu-systemd
+        branches:
+          - name: bionic
+          - name: master
+
+  tasks:
+   - name: loop over docker_repositories
+     include_tasks: _docker_branches.yml
+     loop: "{{ docker_repositories }}"
+     loop_control:
+       label: "{{ repository.name }}"
+       loop_var: repository
