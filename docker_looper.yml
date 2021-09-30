@@ -19,6 +19,10 @@
       - name: docker-archlinux-systemd
         branches:
           - name: master
+      - name: docker-centos-systemd
+        branches:
+          - name: 7
+          - name: master
       - name: docker-centos-openssh
         branches:
           - name: master
@@ -30,6 +34,10 @@
           - name: bookworm
           - name: bullseye
           - name: master
+      - name: docker-enterpriselinux-systemd
+        branches:
+          - name: 7
+          - name: latest
       - name: docker-fedora-systemd
         branches:
           - name: "33"
@@ -77,6 +85,9 @@
       - name: docker-ubuntu-systemd
         branches:
           - name: bionic
+          - name: master
+      - name: mirror
+        branches:
           - name: master
 
   tasks:
