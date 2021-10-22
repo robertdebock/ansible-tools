@@ -9,6 +9,12 @@
     dest: "{{ base_directory }}/{{ repository.name }}"
     version: "{{ branch.name }}"
 
+# This would overwrite the destination where to push the container to. Not a good plan.
+# - name: place github action
+#   copy:
+#     src: build-push-action.yml
+#     dest: "{{ base_directory }}/{{ repository.name }}/.github/workflows/build-push-action.yml"
+
 - name: change the label in the Dockerfile
   lineinfile:
     path: "{{ base_directory }}/{{ repository.name }}/Dockerfile"
@@ -27,6 +33,16 @@
     - name: git commit
       command:
         cmd: git commit --message "Update build_date label"
+        chdir: "{{ base_directory }}/{{ repository.name }}"
+
+    - name: git add
+      command:
+        cmd: git add .github/workflows/build-push-action.yml
+        chdir: "{{ base_directory }}/{{ repository.name }}"
+
+    - name: git commit
+      command:
+        cmd: git commit --message "Add or update GitHub action"
         chdir: "{{ base_directory }}/{{ repository.name }}"
 
     - name: git push

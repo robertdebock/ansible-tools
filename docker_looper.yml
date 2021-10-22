@@ -37,7 +37,7 @@
       - name: docker-enterpriselinux-systemd
         branches:
           - name: 7
-          - name: latest
+          - name: master
       - name: docker-fedora-systemd
         branches:
           - name: "33"
@@ -56,8 +56,6 @@
         branches:
           - name: centos-7
           - name: centos-8
-          - name: fedora-31
-          - name: fedora-32
           - name: fedora-33
           - name: fedora-34
           - name: master
@@ -96,4 +94,3 @@
      loop: "{{ docker_repositories }}"
      loop_control:
        label: "{{ repository.name }}"
-       loop_var: repository
