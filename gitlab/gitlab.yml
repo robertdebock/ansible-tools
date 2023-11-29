@@ -1,0 +1,142 @@
+#!/usr/bin/env ansible-playbook
+---
+- name: Configure gitlab repository
+  hosts: localhost
+  become: no
+  gather_facts: no
+
+  vars_files:
+    - defaults/main.yml
+    - vars/main.yml
+    - defaults/vault.yml
+
+  tasks:
+    - name: see if all variables are set
+      ansible.builtin.assert:
+        that:
+          - gitlab_namespace is defined
+          - role is defined
+        quiet: yes
+
+    - name: Urlencode path
+      ansible.builtin.set_fact:
+        encoded_path: "{{ gitlab_namespace + '%2F' + role }}"
+
+    - name: Place variable
+      block:
+        - name: See if the variable is set already
+          ansible.builtin.uri:
+            url: "https://gitlab.com/api/v4/projects/{{ encoded_path }}/variables"
+            method: GET
+            body_format: json
+            headers:
+              PRIVATE-TOKEN: "{{ gitlab_private_token }}"
+            body:
+              key: "GALAXY_API_KEY"
+          register: check_variable
+          failed_when:
+            check_variable.json | length <= 0
+      rescue:
+        - name: Place variable
+          ansible.builtin.uri:
+            url: "https://gitlab.com/api/v4/projects/{{ encoded_path }}/variables"
+            method: POST
+            body_format: json
+            status_code:
+              - 201
+            headers:
+              PRIVATE-TOKEN: "{{ gitlab_private_token }}"
+            body:
+              key: "GALAXY_API_KEY"
+              value: "{{ galaxy_api_key }}"
+              variable_type: env_var
+              protects: true
+              masked: true
+          register: place_variable
+
+    - name: Update variable
+      ansible.builtin.uri:
+        url: "https://gitlab.com/api/v4/projects/{{ encoded_path }}/variables/GALAXY_API_KEY"
+        method: PUT
+        body_format: json
+        headers:
+          PRIVATE-TOKEN: "{{ gitlab_private_token }}"
+        body:
+          value: "{{ galaxy_api_key }}"
+          variable_type: env_var
+          protects: true
+          masked: true
+      when:  # When the variable is set.
+        - not check_variable.failed
+        - place_variable is not defined
+
+    - name: list pipeline schedules
+      ansible.builtin.uri:
+        url: "https://gitlab.com/api/v4/projects/{{ encoded_path }}/pipeline_schedules"
+        method: GET
+        headers:
+          PRIVATE-TOKEN: "{{ gitlab_private_token }}"
+      register: gitlab_schedules
+ 
+    - name: delete all pipeline schedules
+      ansible.builtin.uri:
+        url: "https://gitlab.com/api/v4/projects/{{ encoded_path }}/pipeline_schedules/{{ item.id }}"
+        method: DELETE
+        headers:
+          PRIVATE-TOKEN: "{{ gitlab_private_token }}"
+        status_code:
+          - 204
+      loop: "{{ gitlab_schedules.json }}"
+      loop_control:
+        label: "{{ item.id }}"
+
+    - name: create a new pipeline schedule
+      ansible.builtin.uri:
+        url: "https://gitlab.com/api/v4/projects/{{ encoded_path }}/pipeline_schedules"
+        method: POST
+        body_format: json
+        status_code:
+          - 201
+        headers:
+          PRIVATE-TOKEN: "{{ gitlab_private_token }}"
+        body:
+          description: "Monthly test"
+          ref: master
+          cron: "{{ letter_minute_mapping[role[14]] | default('13') }} {{ letter_hour_mapping[role[14]] }} {{ letter_day_mapping[role[13]] }} * *"
+          cron_timezone: Amsterdam
+
+    - name: disable runnner
+      ansible.builtin.uri:
+        url: "https://gitlab.com/api/v4/projects/{{ encoded_path }}/runners/{{ gitlab_runner_id }}"
+        method: DELETE
+        body_format: json
+        status_code:
+          - 204
+          - 404
+        headers:
+          PRIVATE-TOKEN: "{{ gitlab_private_token }}"
+        body:
+          runner_id: "{{ gitlab_runner_id }}"
+
+#     - name: enable cloudtop runnner
+#       ansible.builtin.uri:
+#         url: "https://gitlab.com/api/v4/projects/{{ encoded_path }}/runners"
+#         method: POST
+#         body_format: json
+#         status_code:
+#           - 201
+#           - 400
+#         headers:
+#           PRIVATE-TOKEN: "{{ gitlab_private_token }}"
+#         body:
+#           runner_id: "{{ gitlab_runner_id }}"
+
+    - name: disable shared runnners
+      ansible.builtin.uri:
+        url: "https://gitlab.com/api/v4/projects/{{ encoded_path }}"
+        method: PUT
+        body_format: json
+        headers:
+          PRIVATE-TOKEN: "{{ gitlab_private_token }}"
+        body:
+          shared_runners_enabled: false

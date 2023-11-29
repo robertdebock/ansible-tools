@@ -6,6 +6,7 @@
   gather_facts: yes
 
   vars:
+    author: "Robert de Bock"
     base_directory: /Users/robertdb/Documents/github.com/robertdebock
     base_repo_url: git@github.com:robertdebock
     docker_repositories:
@@ -83,6 +84,7 @@
       - name: docker-ubuntu-systemd
         branches:
           - name: bionic
+          - name: focal
           - name: master
       - name: mirror
         branches:
@@ -94,3 +96,4 @@
      loop: "{{ docker_repositories }}"
      loop_control:
        label: "{{ repository.name }}"
+       loop_var: repository

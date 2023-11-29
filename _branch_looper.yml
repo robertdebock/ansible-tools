@@ -7,13 +7,14 @@
   git:
     repo: "{{ base_repo_url }}/{{ repository.name }}.git"
     dest: "{{ base_directory }}/{{ repository.name }}"
+    force: yes
     version: "{{ branch.name }}"
 
-# This would overwrite the destination where to push the container to. Not a good plan.
-# - name: place github action
-#   copy:
-#     src: build-push-action.yml
-#     dest: "{{ base_directory }}/{{ repository.name }}/.github/workflows/build-push-action.yml"
+- name: place LICENSE file
+  template:
+    src: LICENSE-2.0.txt.j2
+    dest: "{{ base_directory }}/{{ repository.name }}/LICENSE"
+  register: license
 
 - name: change the label in the Dockerfile
   lineinfile:
@@ -21,11 +22,11 @@
     regexp: '^LABEL build_date='
     line: LABEL build_date="{{ ansible_date_time.date }}"
     insertafter: '^LABEL '
-  register: change_label
+  register: label
 
 - name: git stuff
   block:
-    - name: git add
+    - name: git add Dockerfile
       command:
         cmd: git add Dockerfile
         chdir: "{{ base_directory }}/{{ repository.name }}"
@@ -35,14 +36,14 @@
         cmd: git commit --message "Update build_date label"
         chdir: "{{ base_directory }}/{{ repository.name }}"
 
-    - name: git add
+    - name: git add LICENSE
       command:
-        cmd: git add .github/workflows/build-push-action.yml
+        cmd: git add LICENSE
         chdir: "{{ base_directory }}/{{ repository.name }}"
 
     - name: git commit
       command:
-        cmd: git commit --message "Add or update GitHub action"
+        cmd: git commit --message "Update license."
         chdir: "{{ base_directory }}/{{ repository.name }}"
 
     - name: git push
@@ -50,4 +51,5 @@
         cmd: git push
         chdir: "{{ base_directory }}/{{ repository.name }}"
   when:
-    - change_label is changed
+    - label is changed or
+      license is changed
